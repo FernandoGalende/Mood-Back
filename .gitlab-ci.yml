@@ -1,0 +1,46 @@
+stages:
+  - lint
+  - test
+  - deploy
+
+linting-application:
+  stage: lint
+  image: node:latest
+  script:
+    - npm install
+    - node_modules/.bin/eslint src/**
+
+testing-application:
+  stage: test
+  image: node:latest
+  script:
+    - npm install
+    - npm test
+
+deploying-application-dev:
+  stage: deploy
+  image: python:latest
+  script:
+    - touch mood.pem
+    - echo -e "$AWS_KEY" >> mood.pem
+    - chmod 400 mood.pem
+    - echo "Deploying app to dev..."
+    - ssh -i mood.pem -oStrictHostKeyChecking=no ec2-user@dev.mood.payvision.app "cd mood-back; git pull origin dev; bash ./.gitlab-deploy.sh $AUDIENCE_DEV $ISSUER_DEV $JWKS_URI_DEV $AWS_ACCESS_KEY_ID_DEV $AWS_SECRET_ACCESS_KEY_DEV $GENERAL_MOOD_TABLE_NAME_DEV $SUGGESTIONS_MOOD_TABLE_DEV $KUDOS_TABLE_DEV $AUTH0_DOMAIN_DEV $CLIENT_ID_MGMT_DEV $CLIENT_SECRET_MGMT_DEV $AUDIENCE_MGMT_DEV $USERS_TABLE_DEV"
+    - rm mood.pem
+  only:
+    - dev
+  when: manual
+
+deploying-application-master:
+  stage: deploy
+  image: python:latest
+  script:
+    - touch mood.pem
+    - echo -e "$AWS_KEY" >> mood.pem
+    - chmod 400 mood.pem
+    - echo "Deploying app to prod..."
+    - ssh -i mood.pem -oStrictHostKeyChecking=no ec2-user@mood.payvision.app "cd mood-back; git pull origin master; bash ./.gitlab-deploy.sh $AUDIENCE_PROD $ISSUER_PROD $JWKS_URI_PROD $AWS_ACCESS_KEY_ID_PROD $AWS_SECRET_ACCESS_KEY_PROD $GENERAL_MOOD_TABLE_NAME_PROD $SUGGESTIONS_MOOD_TABLE_PROD $KUDOS_TABLE_PROD $AUTH0_DOMAIN_PROD $CLIENT_ID_MGMT_PROD $CLIENT_SECRET_MGMT_PROD $AUDIENCE_MGMT_PROD $USERS_TABLE_PROD"
+    - rm mood.pem
+  only:
+    - master
+  when: manual
