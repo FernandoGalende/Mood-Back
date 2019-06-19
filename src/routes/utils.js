@@ -60,7 +60,7 @@ function checkHrGroup(req, res, next) {
     return;
   }
 
-  const { groups } = idToken['https://mood.payvision.app/'];
+  const { groups } = idToken['<prodURL>'];
   if (groups && groups.includes('HR')) {
     next();
   } else {

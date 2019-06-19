@@ -186,7 +186,7 @@ function canErase(user, idtoken) {
   if (email === user) {
     return true;
   }
-  const { groups } = idToken['https://mood.payvision.app/'];
+  const { groups } = idToken['<prodURL>'];
   if (groups && groups.includes('HR')) {
     return true;
   }

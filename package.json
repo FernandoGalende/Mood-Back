@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/ninjas-payvision/mood-back.git"
+    "url": ""
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/ninjas-payvision/mood-back/issues"
+    "url": ""
   },
-  "homepage": "https://gitlab.com/ninjas-payvision/mood-back#README",
+  "homepage": "",
   "dependencies": {
     "aws-sdk": "^2.271.1",
     "body-parser": "^1.18.3",
